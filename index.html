@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Palette of the Possible: a time machine for painters' pigments</title>
+  <meta name="description" content="Explore 56 historical pigments, repaint famous paintings with only the colours available in any year, and solve real forgery cases with simulated X-ray fluorescence.">
+  <meta property="og:title" content="Palette of the Possible">
+  <meta property="og:description" content="A time machine for painters' pigments, inspired by the Forbes Pigment Collection at the Harvard Art Museums.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='3' width='16' height='5' rx='1' fill='%2326282c'/%3E%3Crect x='6' y='7' width='20' height='22' rx='4' fill='%23e9e8e3' stroke='%2326282c' stroke-width='1.5'/%3E%3Crect x='7' y='16' width='18' height='12' rx='3' fill='%232a3fa0'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/BodoniModa.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="fonts/IBMPlexSans.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <a class="brand" href="#wall" aria-label="Palette of the Possible, home">
+      <svg class="brand-jar" viewBox="0 0 32 32" aria-hidden="true"><rect x="9" y="2.5" width="14" height="5" rx="1"/><rect class="g" x="6.5" y="6.5" width="19" height="23" rx="4"/><rect class="p" x="7.5" y="16" width="17" height="12.5" rx="3"/></svg>
+      <span>Palette of the Possible</span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#wall" data-view="wall">The Wall</a>
+      <a href="#machine" data-view="machine">Time Machine</a>
+      <a href="#lab" data-view="lab">The Lab</a>
+      <a href="#about" data-view="about">About</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ============================== THE WALL ============================== -->
+    <section class="view" id="view-wall" data-view="wall" aria-labelledby="wall-title">
+      <div class="hero">
+        <h1 id="wall-title" class="visually-hidden">The Wall: fifty-six pigments through time</h1>
+        <div class="hero-year" aria-hidden="true"><span class="year-num" data-bind="year-num">1503</span><span class="year-era" data-bind="year-era"></span></div>
+        <div class="hero-copy">
+          <p class="hero-line" data-bind="hero-line" aria-live="polite"></p>
+          <p class="hero-sub" data-bind="hero-sub"></p>
+          <div class="controls-row">
+            <div class="seg" role="radiogroup" aria-label="Where is the painter working?" data-control="region">
+              <button type="button" role="radio" data-value="eu">A painter in Europe</button>
+              <button type="button" role="radio" data-value="world">Anywhere on Earth</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-host" data-timeline></div>
+      <div class="presets" data-presets></div>
+
+      <div class="wall-intro">
+        <p>On the fourth floor of the Harvard Art Museums, behind the glass walls of the Straus Center, stand more than 2,700 samples of raw colour: the <a href="https://harvardartmuseums.org/article/pigment-collection-colors-all-aspects-of-the-museums" target="_blank" rel="noopener">Forbes Pigment Collection</a>. Edward Forbes, director of the Fogg Museum from 1909, began it so conservators could compare a painting's materials against known samples. This wall is a small homage to it. Each jar is a pigment, shelved by the era it first appears. Move the dial and watch which jars a painter could actually fill.</p>
+        <p class="legend-line"><span class="key key-full"></span>available <span class="key key-empty"></span>not yet invented <span class="key key-lost"></span>lost or abandoned</p>
+      </div>
+
+      <div class="cabinet" data-bind="cabinet"></div>
+    </section>
+
+    <!-- ============================ TIME MACHINE ============================ -->
+    <section class="view" id="view-machine" data-view="machine" aria-labelledby="machine-title" hidden>
+      <div class="machine-head">
+        <div>
+          <h1 id="machine-title" class="view-title">Time Machine</h1>
+          <p class="lede">Choose a painting, then move the dial. The image is repainted using only the pigments, and mixtures of them, that a painter could buy in that year.</p>
+        </div>
+        <div class="machine-year" aria-hidden="true"><span class="year-num" data-bind="year-num">1503</span><span class="year-era" data-bind="year-era"></span></div>
+      </div>
+      <div class="timeline-host" data-timeline></div>
+      <div class="controls-row machine-controls">
+        <div class="seg" role="radiogroup" aria-label="Where is the painter working?" data-control="region">
+          <button type="button" role="radio" data-value="eu">A painter in Europe</button>
+          <button type="button" role="radio" data-value="world">Anywhere on Earth</button>
+        </div>
+        <label class="check"><input type="checkbox" data-control="patron" checked> <span>The patron can afford lapis ultramarine</span></label>
+      </div>
+      <div class="presets" data-presets></div>
+
+      <div class="machine-grid">
+        <div class="stage-col">
+          <div class="stage" data-bind="stage">
+            <div class="stage-frame" data-bind="frame">
+              <canvas class="cv-original" data-bind="cv-original" aria-hidden="true"></canvas>
+              <canvas class="cv-period" data-bind="cv-period" aria-hidden="true"></canvas>
+              <canvas class="cv-missing" data-bind="cv-missing" aria-hidden="true" hidden></canvas>
+              <div class="split-line" data-bind="split-line" aria-hidden="true"></div>
+              <span class="stage-tag tag-left" data-bind="tag-left"></span>
+              <span class="stage-tag tag-right" data-bind="tag-right">As painted</span>
+              <div class="stage-busy" data-bind="busy" hidden><span>Mixing colours…</span></div>
+            </div>
+            <input class="split-range" type="range" min="0" max="100" value="55" data-bind="split" aria-label="Compare: drag to reveal the original painting">
+          </div>
+          <div class="stage-modes seg" role="radiogroup" aria-label="View" data-control="mode">
+            <button type="button" role="radio" data-value="split">Compare</button>
+            <button type="button" role="radio" data-value="period">Period palette only</button>
+            <button type="button" role="radio" data-value="missing">Show what's out of reach</button>
+          </div>
+          <p class="stage-caption" data-bind="caption"></p>
+
+          <div class="chooser">
+            <div class="chooser-tabs seg" role="tablist" aria-label="Choose an image">
+              <button type="button" role="tab" data-tab="gallery" aria-selected="true">Gallery</button>
+              <button type="button" role="tab" data-tab="upload" aria-selected="false">Your own image</button>
+              <button type="button" role="tab" data-tab="aic" aria-selected="false">Art Institute of Chicago</button>
+            </div>
+            <div class="chooser-panel" data-panel="gallery" role="tabpanel">
+              <ul class="gallery" data-bind="gallery"></ul>
+            </div>
+            <div class="chooser-panel" data-panel="upload" role="tabpanel" hidden>
+              <label class="dropzone" data-bind="dropzone">
+                <input type="file" accept="image/*" data-bind="file">
+                <span><strong>Choose a photo</strong> or drop it here. A picture from your museum visit works well. It stays in your browser; nothing is uploaded.</span>
+              </label>
+            </div>
+            <div class="chooser-panel" data-panel="aic" role="tabpanel" hidden>
+              <form class="aic-form" data-bind="aic-form">
+                <label for="aic-q" class="visually-hidden">Search the Art Institute of Chicago</label>
+                <input id="aic-q" type="search" placeholder="Search public-domain works, e.g. Monet, ukiyo-e, icon" data-bind="aic-q">
+                <button type="submit" class="btn">Search</button>
+              </form>
+              <p class="fine" data-bind="aic-status">Searches the <a href="https://api.artic.edu/docs/" target="_blank" rel="noopener">Art Institute of Chicago's open API</a> for public-domain images.</p>
+              <ul class="gallery aic-results" data-bind="aic-results"></ul>
+            </div>
+          </div>
+        </div>
+
+        <aside class="machine-side" aria-label="Analysis">
+          <div class="stat">
+            <p class="stat-num" data-bind="match-num">–</p>
+            <p class="stat-label" data-bind="match-label">of this painting can be matched closely</p>
+            <div class="meter" aria-hidden="true"><span data-bind="match-bar"></span></div>
+          </div>
+          <div class="side-block">
+            <h2 class="side-h">What the painter would buy</h2>
+            <ol class="shopping" data-bind="shopping"></ol>
+          </div>
+          <div class="side-block">
+            <h2 class="side-h">Out of reach</h2>
+            <p class="fine" data-bind="missing-note"></p>
+            <ul class="swatches" data-bind="missing-swatches"></ul>
+          </div>
+          <div class="side-block">
+            <h2 class="side-h">On the shelf this year</h2>
+            <ul class="chips" data-bind="palette-chips"></ul>
+          </div>
+        </aside>
+      </div>
+
+      <section class="painting-note" data-bind="painting-note" aria-live="polite"></section>
+
+      <div class="charts">
+        <figure class="chart-card">
+          <figcaption>
+            <h2 class="chart-title">The mixable range, seen from above</h2>
+            <p class="fine">Every colour the palette can mix, plotted by hue and intensity (OKLab a/b). The outline marks today's range for comparison.</p>
+          </figcaption>
+          <div class="gamut-disc" data-bind="gamut-disc"></div>
+        </figure>
+        <figure class="chart-card">
+          <figcaption>
+            <h2 class="chart-title">How much of colour space painters could reach</h2>
+            <p class="fine">Area of the mixable range, as a share of what today's palette reaches. Click the chart to travel there.</p>
+          </figcaption>
+          <div class="gamut-time" data-bind="gamut-time"></div>
+          <details class="table-view">
+            <summary>Show as a table</summary>
+            <div data-bind="gamut-table"></div>
+          </details>
+        </figure>
+      </div>
+
+      <section class="ai-compare" data-bind="ai-compare" hidden></section>
+    </section>
+
+    <!-- ================================ LAB ================================ -->
+    <section class="view" id="view-lab" data-view="lab" aria-labelledby="lab-title" hidden>
+      <div class="lab-head">
+        <h1 id="lab-title" class="view-title">The Lab</h1>
+        <p class="lede">Conservation scientists date paintings partly by what is in them. If a picture contains a pigment that was invented later than the date it claims, it cannot be what it says it is. Archaeologists call this the <em>terminus post quem</em>: the earliest a thing could have been made.</p>
+        <details class="explainer">
+          <summary>How X-ray fluorescence works</summary>
+          <p>An XRF spectrometer shines X-rays at the paint. They knock electrons out of the inner shells of atoms; as other electrons fall in to fill the gaps, each element releases a second, weaker X-ray at its own fixed energy. The instrument counts photons by energy, so each peak names an element. Lead in lead white, mercury in vermilion and titanium in titanium white all have fingerprints you can read.</p>
+          <p>XRF has limits, and the cases use them. It reports elements, not compounds, so copper could be 1,000-year-old azurite or 1935 phthalocyanine blue. Light elements and organic pigments such as indigo, madder or modern synthetics are nearly invisible to it. Some peaks overlap: arsenic and lead sit almost on top of each other. Real labs add Raman spectroscopy, microscopy and chromatography; their findings appear in each case's lab notes. The spectra here are simulated at the true emission energies, but the peak heights are illustrative.</p>
+        </details>
+      </div>
+      <div class="lab-grid">
+        <nav class="case-list" aria-label="Case files" data-bind="case-list"></nav>
+        <article class="case" data-bind="case" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <!-- =============================== ABOUT =============================== -->
+    <section class="view prose" id="view-about" data-view="about" aria-labelledby="about-title" hidden>
+      <h1 id="about-title" class="view-title">About this project</h1>
+      <div data-bind="about"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Made for CS 85 at Harvard, fall 2026. Inspired by the Forbes Pigment Collection at the Straus Center for Conservation and Technical Studies, Harvard Art Museums. Colours on screen are approximations of real pigments. <a href="#about">Sources and method</a>.</p>
+  </footer>
+
+  <dialog class="drawer" data-bind="drawer" aria-labelledby="drawer-title">
+    <div class="drawer-inner" data-bind="drawer-inner"></div>
+  </dialog>
+
+  <div class="tooltip" data-bind="tooltip" role="status" hidden></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

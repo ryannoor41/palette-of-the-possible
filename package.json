@@ -1,0 +1,10 @@
+{
+  "name": "palette-of-the-possible",
+  "private": true,
+  "type": "module",
+  "description": "A time machine for painters' pigments. Static site; no build step.",
+  "scripts": {
+    "check": "node scripts/check-data.mjs",
+    "serve": "python3 -m http.server 8000"
+  }
+}
