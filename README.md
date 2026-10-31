@@ -1,0 +1,1 @@
+# palette-of-the-possible
