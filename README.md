@@ -2,7 +2,7 @@
 
 **A time machine for painters' pigments.** Move a dial through 42,000 years and watch which colours a painter could actually buy. Repaint *Girl with a Pearl Earring* with a cave painter's ochres, find out how much of *The Starry Night* a medieval workshop could have mixed, and use simulated X-ray spectra to catch real forgers.
 
-**Live site: https://YOUR-GITHUB-USERNAME.github.io/palette-of-the-possible/**
+**Live site: https://ryannoor41.github.io/palette-of-the-possible/**
 
 ![The Wall in 1708, when Prussian blue reaches painters](docs/wall-top.jpg)
 
