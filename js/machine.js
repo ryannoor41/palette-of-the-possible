@@ -4,6 +4,7 @@ import { availableAt, paletteKey, formatYear, yearToT, tToYear, eventsFor, MIN_Y
 import { reachable, hull2d, polygonArea } from './gamut.js';
 import { openPigment } from './drawer.js';
 import { searchAIC } from './aic.js';
+import { searchHarvard, loadKey, saveKey, forgetKey, maskKey, HarvardKeyError, KEY_REQUEST_URL } from './harvard.js';
 import { rgbToHex } from './color.js';
 
 const MAX_SIDE = 960;
@@ -381,7 +382,7 @@ export function mountMachine(root, store, { pigments, paintings }) {
     if (!p) {
       host.replaceChildren(...[
         h('h2', {}, current?.title || ''),
-        current?.credit ? h('p', { class: 'meta' }, current.credit) : null,
+        current?.credit ? h('p', { class: 'meta' }, current.credit, current.link ? [' ', h('a', { href: current.link, target: '_blank', rel: 'noopener' }, 'View on the museum\'s website')] : null) : null,
         h('div', {}, h('p', {}, current?.credit
           ? 'Without a technical study we cannot know which pigments this work really contains, but the Time Machine can still show what a painter of any year could have mixed to match it.'
           : 'Try the dial on your own picture: the colours that stay vivid in "Show what\'s out of reach" are the ones no painter of that year could have mixed.')),
@@ -476,11 +477,11 @@ export function mountMachine(root, store, { pigments, paintings }) {
     aicResults.replaceChildren();
     try {
       const items = await searchAIC(q);
-      aicStatus.textContent = items.length ? `${items.length} public-domain works found. Choose one to load it.` : 'No public-domain works with images matched. Try an artist or a style.';
+      aicStatus.textContent = items.length ? `${items.length} public-domain ${items.length === 1 ? 'work' : 'works'} found. Choose one to load it.` : 'No public-domain works with images matched. Try an artist or a style.';
       aicResults.replaceChildren(...items.map((it) => h('li', {},
         h('button', { type: 'button', onclick: async () => {
           gallery.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-          const ok = await useImage(it.image, { key: `aic-${it.id}`, title: it.title, year: it.year, yearLabel: it.dateDisplay, credit: `${it.artist}, ${it.dateDisplay}. Art Institute of Chicago, public domain.` }, true);
+          const ok = await useImage(it.image, { key: `aic-${it.id}`, title: it.title, year: it.year, yearLabel: it.dateDisplay, credit: `${it.artist}, ${it.dateDisplay}. Art Institute of Chicago, public domain.`, link: `https://www.artic.edu/artworks/${it.id}` }, true);
           if (ok) frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } },
           h('img', { src: it.thumb, alt: '', loading: 'lazy', width: 104, height: 104 }),
@@ -491,6 +492,74 @@ export function mountMachine(root, store, { pigments, paintings }) {
       aicStatus.textContent = "The Art Institute's search didn't respond. Check your connection and try again.";
     }
   });
+
+  // Harvard Art Museums search (visitor's own API key, kept in their browser)
+  let hamKey = loadKey();
+  const hamKeyForm = el('ham-key-form');
+  const hamSearch = el('ham-search');
+  const hamStatus = el('ham-status');
+  const hamResults = el('ham-results');
+  el('ham-request').href = KEY_REQUEST_URL;
+  const hamDefaultStatus = hamStatus.textContent;
+  function renderHarvardKey() {
+    hamKeyForm.hidden = !!hamKey;
+    hamSearch.hidden = !hamKey;
+    el('ham-mask').textContent = maskKey(hamKey);
+  }
+  hamKeyForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = el('ham-key');
+    const key = input.value.trim();
+    input.value = '';
+    if (!key) return;
+    hamKeyForm.querySelector('.error-line')?.remove();
+    hamKey = key;
+    saveKey(key, el('ham-remember').checked);
+    hamStatus.textContent = hamDefaultStatus;
+    renderHarvardKey();
+    el('ham-q').focus();
+  });
+  el('ham-forget').addEventListener('click', () => {
+    hamKey = null;
+    forgetKey();
+    hamResults.replaceChildren();
+    renderHarvardKey();
+    el('ham-key').focus();
+  });
+  el('ham-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const q = el('ham-q').value.trim();
+    if (!q || !hamKey) return;
+    hamStatus.textContent = 'Searching the Harvard Art Museums…';
+    hamResults.replaceChildren();
+    try {
+      const items = await searchHarvard(q, hamKey, { paintingsOnly: el('ham-paintings').checked });
+      hamStatus.textContent = items.length ? `${items.length} ${items.length === 1 ? 'work' : 'works'} with open images. Choose one to load it.` : 'No works with open images matched. Try an artist, a place or a subject, or untick "Paintings only".';
+      hamResults.replaceChildren(...items.map((it) => h('li', {},
+        h('button', { type: 'button', onclick: async () => {
+          gallery.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+          const credit = [it.artist, it.dateDisplay, it.medium].filter(Boolean).join(', ') + `. Harvard Art Museums${it.number ? `, ${it.number}` : ''}.`;
+          const ok = await useImage(it.image, { key: `ham-${it.id}`, title: it.title, year: it.year, yearLabel: it.dateDisplay, credit, link: it.url }, true);
+          if (ok) frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } },
+          h('img', { src: it.thumb, alt: '', loading: 'lazy', width: 104, height: 104 }),
+          h('span', { class: 'g-title' }, it.title),
+          h('span', { class: 'g-date' }, it.dateDisplay)
+        ))));
+    } catch (err) {
+      hamStatus.textContent = err instanceof HarvardKeyError
+        ? 'Harvard did not accept this key. Check it and paste it again.'
+        : "The Harvard Art Museums API didn't respond. Check your connection and try again.";
+      if (err instanceof HarvardKeyError) {
+        hamKey = null;
+        forgetKey();
+        renderHarvardKey();
+        hamKeyForm.querySelector('.error-line')?.remove();
+        hamKeyForm.querySelector('.fine').before(h('p', { class: 'fine error-line', role: 'alert' }, 'Harvard did not accept that key. Check it and paste it again.'));
+      }
+    }
+  });
+  renderHarvardKey();
 
   // compare slider + direct dragging on the picture
   split.addEventListener('input', () => setSplit(split.value));

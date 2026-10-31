@@ -22,7 +22,7 @@ export function renderAbout(host, { pigments }) {
     h('h3', {}, 'The Wall'),
     P(`${pigments.length} pigments as jars on shelves, after the cabinets of the Forbes collection. The dial fills and empties them by date, for a painter in Europe or anywhere on Earth. Pigments can also disappear: lead-tin yellow was forgotten around 1750 and Egyptian blue after antiquity. Each jar opens a card with its chemistry, its history, where to see it and what an X-ray spectrometer would detect.`),
     h('h3', {}, 'The Time Machine'),
-    P('Choose a painting, or your own photo, and a year. The image is repainted using only colours that could be mixed from the pigments on the shelf that year. Side panels show how much of the picture can be matched closely, which pigments a period painter would have needed, and which colours were out of reach. Two charts show the mixable range of colour and how it grew over 42,000 years.'),
+    P('Choose a painting, your own photo or a work from the Harvard Art Museums collection, then a year. The image is repainted using only colours that could be mixed from the pigments on the shelf that year. Side panels show how much of the picture can be matched closely, which pigments a period painter would have needed, and which colours were out of reach. Two charts show the mixable range of colour and how it grew over 42,000 years.'),
     h('h3', {}, 'The Lab'),
     P('Six real cases (the Vinland Map, Beltracchi\'s Campendonk, van Meegeren\'s Vermeer, the "Matter Pollocks" studied at Harvard, the medieval woman with lapis lazuli in her teeth, and Van Gogh\'s Sunset at Montmajour), each with a simulated X-ray fluorescence spectrum, lab notes and questions. A "night shift" mode generates endless cases from the pigment database.'),
 
@@ -47,7 +47,7 @@ export function renderAbout(host, { pigments }) {
     ),
 
     h('h2', {}, 'Credits'),
-    P('Painting images are public-domain photographs of public-domain works, taken from open-source research repositories that redistribute them. Search results are served by the ', A('https://api.artic.edu/docs/', 'Art Institute of Chicago API'), ' and include only works it marks as public domain.'),
+    P('Painting images are public-domain photographs of public-domain works, taken from open-source research repositories that redistribute them. Search results are served by the ', A('https://github.com/harvardartmuseums/api-docs', 'Harvard Art Museums API'), ' (with your own key, which stays in your browser) and the ', A('https://api.artic.edu/docs/', 'Art Institute of Chicago API'), ', limited to images each museum makes openly available.'),
     P('Typefaces under the SIL Open Font License: Bodoni Moda by Owen Earl, IBM Plex Sans by IBM, Courier Prime by Alan Dague-Greene.'),
     P('Pigment research draws most on ', [...domains.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([d]) => d).join(', '), ', and others listed on each pigment card; case sources are listed in the Lab.'),
     P('Built for CS 85 at Harvard (fall 2026) with help from Claude, an AI assistant, for research, code and copy, all reviewed and checked against sources. No generative image model was used for the core experience. The optional script in the repository compares an image model\'s "period repainting" with the colour-science result.'),

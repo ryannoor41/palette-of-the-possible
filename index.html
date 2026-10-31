@@ -100,6 +100,7 @@
             <div class="chooser-tabs seg" role="tablist" aria-label="Choose an image">
               <button type="button" role="tab" data-tab="gallery" aria-selected="true">Gallery</button>
               <button type="button" role="tab" data-tab="upload" aria-selected="false">Your own image</button>
+              <button type="button" role="tab" data-tab="harvard" aria-selected="false">Harvard Art Museums</button>
               <button type="button" role="tab" data-tab="aic" aria-selected="false">Art Institute of Chicago</button>
             </div>
             <div class="chooser-panel" data-panel="gallery" role="tabpanel">
@@ -110,6 +111,31 @@
                 <input type="file" accept="image/*" data-bind="file">
                 <span><strong>Choose a photo</strong> or drop it here. A picture from your museum visit works well. It stays in your browser; nothing is uploaded.</span>
               </label>
+            </div>
+            <div class="chooser-panel" data-panel="harvard" role="tabpanel" hidden>
+              <form class="key-form" data-bind="ham-key-form" autocomplete="off">
+                <label for="ham-key" class="key-label">Search the collection you visited. Paste your Harvard Art Museums API key to begin.</label>
+                <div class="aic-form">
+                  <input id="ham-key" type="password" autocomplete="off" spellcheck="false" placeholder="00000000-0000-0000-0000-000000000000" data-bind="ham-key">
+                  <button type="submit" class="btn">Use key</button>
+                </div>
+                <label class="check"><input type="checkbox" data-bind="ham-remember"> <span>Remember the key on this device</span></label>
+                <p class="fine">Your key stays in this browser and is sent only to the Harvard Art Museums API. It is never stored in this site's code or sent anywhere else. Without "remember", it is cleared when you close the tab. No key? <a data-bind="ham-request" target="_blank" rel="noopener">Request one free from Harvard</a>.</p>
+              </form>
+              <div data-bind="ham-search" hidden>
+                <form class="aic-form" data-bind="ham-form">
+                  <label for="ham-q" class="visually-hidden">Search the Harvard Art Museums</label>
+                  <input id="ham-q" type="search" placeholder="Search, e.g. Fra Angelico, Monet, Van Gogh, icon" data-bind="ham-q">
+                  <button type="submit" class="btn">Search</button>
+                </form>
+                <div class="key-row">
+                  <label class="check"><input type="checkbox" checked data-bind="ham-paintings"> <span>Paintings only</span></label>
+                  <span class="fine">Using key <span data-bind="ham-mask"></span></span>
+                  <button type="button" class="link-btn" data-bind="ham-forget">Forget key</button>
+                </div>
+                <p class="fine" data-bind="ham-status">Only works with openly licensed images are returned; Harvard withholds images of many 20th-century works.</p>
+                <ul class="gallery aic-results" data-bind="ham-results"></ul>
+              </div>
             </div>
             <div class="chooser-panel" data-panel="aic" role="tabpanel" hidden>
               <form class="aic-form" data-bind="aic-form">

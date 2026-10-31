@@ -29,7 +29,7 @@ The project grew out of our class visit to the **Harvard Art Museums**. On the f
 ![Jars on the Wall](docs/wall-jars.jpg)
 
 ### 2. The Time Machine
-Choose a painting from the gallery (Leonardo, Vermeer, Turner, Hokusai, Seurat, Van Gogh, Munch, Cézanne, Matisse, Kandinsky, Monet), your own photo, or any public-domain work from the Art Institute of Chicago's open API. The image is **repainted using only colours that could be mixed from the pigments on the shelf in the chosen year**. Drag across the picture to compare. The side panel reports:
+Choose a painting from the gallery (Leonardo, Vermeer, Turner, Hokusai, Seurat, Van Gogh, Munch, Cézanne, Matisse, Kandinsky, Monet), your own photo, a work from the **Harvard Art Museums** collection (with your own free API key, see below), or any public-domain work from the Art Institute of Chicago's open API. The image is **repainted using only colours that could be mixed from the pigments on the shelf in the chosen year**. Drag across the picture to compare. The side panel reports:
 
 - how much of the picture can be matched closely,
 - a "shopping list" of the pigments a period painter would have needed,
@@ -105,6 +105,7 @@ js/gamut.js           everything a palette can mix; convex hull
 js/mixer-worker.js    Web Worker: lookup table, repainting, statistics
 js/machine.js         Time Machine UI and charts (SVG)
 js/aic.js             Art Institute of Chicago API search
+js/harvard.js         Harvard Art Museums API search (visitor's own key)
 js/xrf.js             XRF line table and spectrum simulator
 js/lab.js             case files and the Night shift generator
 js/data/*.js          pigments, paintings, cases (the research lives here)
@@ -123,6 +124,8 @@ scripts/prodia_repaint.py optional image-model comparison (see below)
 **XRF.** Peaks sit at true emission-line energies from the LBNL *X-ray Data Booklet* (Table 1-2). The simulation includes energy-dependent detector resolution, air absorption of light elements, a rhodium-tube scatter peak and Compton hump, a continuum, and counting noise. Heights are illustrative, not quantitative.
 
 **Night shift.** The generator picks a year and a period-correct palette. About half the time it slips in one pigment whose characteristic element appeared later than the claimed date, preferring near anachronisms, as a real forger's mistakes would be. Answers are computed from the same database the Wall uses, and any element that is impossible for the year counts as correct. A fuzz test of 3,000 generated cases found no inconsistent answers.
+
+**Harvard Art Museums search and API keys.** The Harvard API requires a personal key, so the site never contains one. Visitors paste their own key into the Time Machine's Harvard tab. The key is kept only in that browser: in `sessionStorage` (cleared when the tab closes) or, if the visitor ticks "remember", in `localStorage`. It is sent only to `api.harvardartmuseums.org`, never put in the page URL, and "Forget key" deletes it. Images come from Harvard's IIIF image server. Works whose images Harvard withholds for rights reasons (many 20th-century works) are skipped. You can [request a free key from Harvard](https://docs.google.com/forms/d/1Fe1H4nOhFkrLpaeBpLAnSrIMYvcAxnYWm0IU9a6IkFA/viewform); see the [API docs](https://github.com/harvardartmuseums/api-docs).
 
 **Quality.** The site works with the keyboard throughout (Page Up and Page Down on the dial jump between pigment arrivals). It respects reduced-motion settings, offers a table view for the range chart, and is responsive down to phone width. Fonts are self-hosted.
 
@@ -161,7 +164,7 @@ python3 scripts/prodia_repaint.py               # Nano Banana, about $0.24 for a
 
 ## Credits
 
-- Painting images are public-domain photographs of public-domain works, redistributed in open-source research repositories. Search results come from the [Art Institute of Chicago API](https://api.artic.edu/docs/) and are limited to works it marks as public domain.
+- Painting images are public-domain photographs of public-domain works, redistributed in open-source research repositories. Search results come from the [Harvard Art Museums API](https://github.com/harvardartmuseums/api-docs) (with the visitor's key) and the [Art Institute of Chicago API](https://api.artic.edu/docs/), limited to images each museum makes openly available.
 - Typefaces under the SIL Open Font License: Bodoni Moda (Owen Earl), IBM Plex Sans (IBM), Courier Prime (Alan Dague-Greene). Licence texts are in `fonts/`.
 - XRF energies: Lawrence Berkeley National Laboratory, *X-ray Data Booklet*.
 - Inspiration: the Forbes Pigment Collection and the Straus Center for Conservation and Technical Studies, Harvard Art Museums.

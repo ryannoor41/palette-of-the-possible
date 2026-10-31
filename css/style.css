@@ -500,3 +500,10 @@ main { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--pad); }
   .jar-powder { forced-color-adjust: none; }
   .dot, .swatches span, .tl-tick { forced-color-adjust: none; }
 }
+
+/* Harvard key panel */
+.key-form { display: grid; gap: 10px; }
+.key-label { font-size: 15px; }
+.key-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 10px; }
+.link-btn { border: 0; background: none; padding: 0; color: var(--lapis-ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font-size: 14px; }
+.error-line { color: var(--bad); }
